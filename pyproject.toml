@@ -1,0 +1,19 @@
+[project]
+name = "unfake"
+version = "0.1.0"
+description = "Fake news detection using and Automated fact checking using AI."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.14.2",
+    "datasets>=4.4.1",
+    "pandas>=2.3.3",
+    "requests>=2.32.5",
+    "scikit-learn>=1.7.2",
+]
+
+[dependency-groups]
+dev = ["ruff>=0.14.7"]
+
+[tool.ruff]
+indent-width = 2
