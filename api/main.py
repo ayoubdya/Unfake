@@ -8,12 +8,18 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import torch
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from api.types import (
+  ArticleRequest,
+  ArticlePredictionResponse,
+  PredictionResponse,
+  StatementRequest,
+)
+from api.text_processing import clean_text, clean_article
 
 # HEADLINE
 HEADLINE_MODEL_DIR = os.path.join(
-  os.path.dirname(__file__), "..", "data", "fake_news_classifier"
+  os.path.dirname(__file__), "..", "data", "RoBERTa_Classifier"
 )
 MAX_LENGTH = 256
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -31,26 +37,6 @@ VECTORIZER_DIR = os.path.join(
 
 article_model: GradientBoostingClassifier | None = None
 vectorizer: TfidfVectorizer | None = None
-
-
-def clean_text(text: str) -> str:
-  text = text.lower()
-  text = re.sub(r"[^a-z0-9\s,.!?]", " ", text)
-  text = re.sub(r"\s+", " ", text)
-  text = text.strip()
-  return text
-
-
-def clean_article(text: str) -> str:
-  text = text.lower().strip()
-  text = re.sub(r"https?://\S+|www\.\S+", "", text)
-  text = re.sub(r"\[.*?\]", "", text)
-  text = re.sub(r"\w*\d\w*", "", text)
-  text = re.sub(r"<.*?>+", "", text)
-  text = re.sub(r"\n", " ", text)
-  text = re.sub(r"\s+", " ", text)
-  text = re.sub(r"\W", " ", text)
-  return text
 
 
 def load_article_model():
@@ -115,62 +101,6 @@ app.add_middleware(
 )
 
 
-class StatementRequest(BaseModel):
-  statement: str
-
-  class Config:
-    json_schema_extra = {
-      "example": {
-        "statement": "Scientists confirm that regular exercise improves cardiovascular health."
-      }
-    }
-
-
-class ArticleRequest(BaseModel):
-  article: str
-
-  class Config:
-    json_schema_extra = {
-      "example": {
-        "article": "A new study published in the Journal of Medicine reveals that drinking water daily can improve overall health. Researchers at Harvard University conducted a 10-year study..."
-      }
-    }
-
-
-class PredictionResponse(BaseModel):
-  statement: str
-  prediction: str
-  confidence: float
-  probabilities: dict
-
-  class Config:
-    json_schema_extra = {
-      "example": {
-        "statement": "Scientists confirm that regular exercise improves cardiovascular health.",
-        "prediction": "Real",
-        "confidence": 0.92,
-        "probabilities": {"fake": 0.08, "real": 0.92},
-      }
-    }
-
-
-class ArticlePredictionResponse(BaseModel):
-  article: str
-  prediction: str
-  confidence: float
-  probabilities: dict
-
-  class Config:
-    json_schema_extra = {
-      "example": {
-        "article": "A new study published in the Journal of Medicine...",
-        "prediction": "Real",
-        "confidence": 0.89,
-        "probabilities": {"fake": 0.11, "real": 0.89},
-      }
-    }
-
-
 @app.get("/")
 async def root():
   return {
@@ -217,8 +147,8 @@ async def predict(request: StatementRequest):
   return PredictionResponse(
     statement=request.statement,
     prediction=prediction,
-    confidence=round(confidence, 4),
-    probabilities={"fake": round(prob_fake, 4), "real": round(prob_real, 4)},
+    confidence=round(confidence, 2),
+    probabilities={"fake": round(prob_fake, 2), "real": round(prob_real, 2)},
   )
 
 
@@ -268,8 +198,8 @@ async def predict_batch(statements: list[str]):
       {
         "statement": statement,
         "prediction": prediction,
-        "confidence": round(confidence, 4),
-        "probabilities": {"fake": round(prob_fake, 4), "real": round(prob_real, 4)},
+        "confidence": round(confidence, 2),
+        "probabilities": {"fake": round(prob_fake, 2), "real": round(prob_real, 2)},
       }
     )
 
@@ -302,10 +232,10 @@ async def predict_article(request: ArticleRequest):
     if len(request.article) > 500
     else request.article,
     prediction=prediction,
-    confidence=round(float(confidence), 4),
+    confidence=round(float(confidence), 2),
     probabilities={
-      "fake": round(float(prob_fake), 4),
-      "real": round(float(prob_real), 4),
+      "fake": round(float(prob_fake), 2),
+      "real": round(float(prob_real), 2),
     },
   )
 
@@ -343,10 +273,10 @@ async def predict_article_batch(articles: list[str]):
       {
         "article": article[:500] + "..." if len(article) > 500 else article,
         "prediction": prediction,
-        "confidence": round(float(confidence), 4),
+        "confidence": round(float(confidence), 2),
         "probabilities": {
-          "fake": round(float(prob_fake), 4),
-          "real": round(float(prob_real), 4),
+          "fake": round(float(prob_fake), 2),
+          "real": round(float(prob_real), 2),
         },
       }
     )
