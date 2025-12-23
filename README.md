@@ -1,2 +1,0 @@
-- Made a machine learning model to classify articles as real or fake news
-- Scraped 26000 statements from Politifact.com
