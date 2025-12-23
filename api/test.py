@@ -142,11 +142,18 @@ async def predict(request: StatementRequest):
 
   # prediction = "Real" if pred_class == 1 else "Fake"
 
+  # return PredictionResponse(
+  #   statement=request.statement,
+  #   prediction="Real",
+  #   confidence=round(0.64, 4),
+  #   probabilities={"fake": round(0.36, 4), "real": round(0.64, 4)},
+  # )
+
   return PredictionResponse(
     statement=request.statement,
-    prediction="Real",
+    prediction="Fake",
     confidence=round(0.64, 4),
-    probabilities={"fake": round(0.36, 4), "real": round(0.64, 4)},
+    probabilities={"fake": round(0.64, 4), "real": round(0.36, 4)},
   )
 
 

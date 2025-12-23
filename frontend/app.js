@@ -1,12 +1,19 @@
 const API_URL = "http://localhost:8000";
 
-const statementInput = document.getElementById("statement");
+let currentMode = "statement";
+
+const contentInput = document.getElementById("content-input");
+const inputLabel = document.getElementById("input-label");
 const analyzeBtn = document.getElementById("analyze-btn");
 const resultsSection = document.getElementById("results");
 const errorSection = document.getElementById("error");
 const inputSection = document.querySelector(".input-section");
 
-const verdictIcon = document.getElementById("verdict-icon");
+const modeStatementBtn = document.getElementById("mode-statement");
+const modeArticleBtn = document.getElementById("mode-article");
+
+const iconFake = document.getElementById("icon-fake");
+const iconReal = document.getElementById("icon-real");
 const verdictText = document.getElementById("verdict-text");
 const confidenceValue = document.getElementById("confidence-value");
 const progressCircle = document.getElementById("progress-circle");
@@ -14,7 +21,8 @@ const fakeBar = document.getElementById("fake-bar");
 const realBar = document.getElementById("real-bar");
 const fakePercent = document.getElementById("fake-percent");
 const realPercent = document.getElementById("real-percent");
-const analyzedStatement = document.getElementById("analyzed-statement");
+const previewLabel = document.getElementById("preview-label");
+const analyzedContent = document.getElementById("analyzed-content");
 const resetBtn = document.getElementById("reset-btn");
 const errorMessage = document.getElementById("error-message");
 const errorDismiss = document.getElementById("error-dismiss");
@@ -25,18 +33,45 @@ analyzeBtn.addEventListener("click", handleAnalyze);
 resetBtn.addEventListener("click", handleReset);
 errorDismiss.addEventListener("click", handleReset);
 
-statementInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
+modeStatementBtn.addEventListener("click", () => switchMode("statement"));
+modeArticleBtn.addEventListener("click", () => switchMode("article"));
+
+contentInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey && currentMode === "statement") {
     e.preventDefault();
     handleAnalyze();
   }
 });
 
-async function handleAnalyze() {
-  const statement = statementInput.value.trim();
+function switchMode(mode) {
+  currentMode = mode;
 
-  if (!statement) {
-    showError("Please enter a statement to analyze.");
+  modeStatementBtn.classList.toggle("active", mode === "statement");
+  modeArticleBtn.classList.toggle("active", mode === "article");
+
+  if (mode === "statement") {
+    inputLabel.textContent = "Enter a statement to verify";
+    contentInput.placeholder = "Paste or type a news statement here...";
+    contentInput.rows = 4;
+    analyzeBtn.querySelector(".btn-text").textContent = "Analyze Statement";
+  } else {
+    inputLabel.textContent = "Enter an article to verify";
+    contentInput.placeholder = "Paste or type a news article here...";
+    contentInput.rows = 8;
+    analyzeBtn.querySelector(".btn-text").textContent = "Analyze Article";
+  }
+
+  contentInput.focus();
+}
+
+async function handleAnalyze() {
+  const content = contentInput.value.trim();
+  const isArticle = currentMode === "article";
+
+  if (!content) {
+    showError(
+      `Please enter ${isArticle ? "an article" : "a statement"} to analyze.`
+    );
     return;
   }
 
@@ -44,12 +79,15 @@ async function handleAnalyze() {
   hideError();
 
   try {
-    const response = await fetch(`${API_URL}/predict`, {
+    const endpoint = isArticle ? "/predict/article" : "/predict";
+    const body = isArticle ? { article: content } : { statement: content };
+
+    const response = await fetch(`${API_URL}${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ statement }),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
@@ -58,7 +96,7 @@ async function handleAnalyze() {
     }
 
     const data = await response.json();
-    showResults(data);
+    showResults(data, isArticle);
   } catch (error) {
     console.error("Analysis error:", error);
 
@@ -76,19 +114,25 @@ async function handleAnalyze() {
   }
 }
 
-function showResults(data) {
-  const { prediction, confidence, probabilities, statement } = data;
+function showResults(data, isArticle = false) {
+  const { prediction, confidence, probabilities } = data;
+  const content = isArticle ? data.article : data.statement;
   const isFake = prediction === "Fake";
 
   inputSection.classList.add("hidden");
   resultsSection.classList.remove("hidden");
 
-  verdictIcon.textContent = isFake ? "🚫" : "✅";
+  iconFake.classList.toggle("hidden", !isFake);
+  iconReal.classList.toggle("hidden", isFake);
+
   verdictText.textContent = isFake ? "Likely Fake" : "Likely Real";
   verdictText.className = `verdict-text ${isFake ? "fake" : "real"}`;
 
-  analyzedStatement.textContent =
-    statement.length > 300 ? statement.substring(0, 300) + "..." : statement;
+  previewLabel.textContent = isArticle
+    ? "Analyzed Article"
+    : "Analyzed Statement";
+  analyzedContent.textContent =
+    content.length > 300 ? content.substring(0, 300) + "..." : content;
 
   const confidencePercent = Math.round(confidence * 100);
   progressCircle.className = `progress-ring-circle ${isFake ? "fake" : "real"}`;
@@ -138,12 +182,15 @@ function handleReset() {
   fakePercent.textContent = "0%";
   realPercent.textContent = "0%";
 
+  iconFake.classList.add("hidden");
+  iconReal.classList.add("hidden");
+
   inputSection.classList.remove("hidden");
   resultsSection.classList.add("hidden");
   errorSection.classList.add("hidden");
 
-  statementInput.value = "";
-  statementInput.focus();
+  contentInput.value = "";
+  contentInput.focus();
 }
 
 function showError(message) {
@@ -176,5 +223,5 @@ async function checkApiHealth() {
 
 document.addEventListener("DOMContentLoaded", () => {
   checkApiHealth();
-  statementInput.focus();
+  contentInput.focus();
 });

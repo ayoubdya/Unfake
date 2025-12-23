@@ -1,52 +1,101 @@
 import os
 import re
 from contextlib import asynccontextmanager
+import pickle
 
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.feature_extraction.text import TfidfVectorizer
 import torch
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-MODEL_DIR = os.path.join(
+# HEADLINE
+HEADLINE_MODEL_DIR = os.path.join(
   os.path.dirname(__file__), "..", "data", "fake_news_classifier"
 )
 MAX_LENGTH = 256
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-model = None
+headline_model = None
 tokenizer = None
+
+# ARTICLE
+ARTICLE_MODEL_DIR = os.path.join(
+  os.path.dirname(__file__), "..", "data", "gradient_boosting_classifier.pkl"
+)
+VECTORIZER_DIR = os.path.join(
+  os.path.dirname(__file__), "..", "data", "tfidf_vectorizer.pkl"
+)
+
+article_model: GradientBoostingClassifier | None = None
+vectorizer: TfidfVectorizer | None = None
 
 
 def clean_text(text: str) -> str:
   text = text.lower()
-  text = re.sub(r"[^!?,\.\w]", " ", text)
+  text = re.sub(r"[^a-z0-9\s,.!?]", " ", text)
   text = re.sub(r"\s+", " ", text)
   text = text.strip()
   return text
 
 
-def load_model():
-  global model, tokenizer
+def clean_article(text: str) -> str:
+  text = text.lower().strip()
+  text = re.sub(r"https?://\S+|www\.\S+", "", text)
+  text = re.sub(r"\[.*?\]", "", text)
+  text = re.sub(r"\w*\d\w*", "", text)
+  text = re.sub(r"<.*?>+", "", text)
+  text = re.sub(r"\n", " ", text)
+  text = re.sub(r"\s+", " ", text)
+  text = re.sub(r"\W", " ", text)
+  return text
 
-  if not os.path.exists(MODEL_DIR):
+
+def load_article_model():
+  global article_model, vectorizer
+
+  if not os.path.exists(ARTICLE_MODEL_DIR) or not os.path.exists(VECTORIZER_DIR):
     raise RuntimeError(
-      f"Model directory not found: {MODEL_DIR}. "
+      f"Model or vectorizer file not found: {ARTICLE_MODEL_DIR} or {VECTORIZER_DIR}. "
       "Please train the model first using the train.ipynb notebook."
     )
 
-  tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
-  model = AutoModelForSequenceClassification.from_pretrained(MODEL_DIR)
-  model.to(DEVICE)
-  model.eval()
+  with open(ARTICLE_MODEL_DIR, "rb") as f:
+    article_model = pickle.load(f)
 
-  print(f"Model loaded from {MODEL_DIR}")
+  with open(VECTORIZER_DIR, "rb") as f:
+    vectorizer = pickle.load(f)
+
+  print(f"Article model loaded from {ARTICLE_MODEL_DIR}")
+  print(f"Vectorizer loaded from {VECTORIZER_DIR}")
+
+
+def load_headline_model():
+  global headline_model, tokenizer
+
+  if not os.path.exists(HEADLINE_MODEL_DIR):
+    raise RuntimeError(
+      f"Model directory not found: {HEADLINE_MODEL_DIR}. "
+      "Please train the model first using the train.ipynb notebook."
+    )
+
+  tokenizer = AutoTokenizer.from_pretrained(HEADLINE_MODEL_DIR)
+  headline_model = AutoModelForSequenceClassification.from_pretrained(
+    HEADLINE_MODEL_DIR
+  )
+  headline_model.to(DEVICE)
+  headline_model.eval()
+
+  print(f"Model loaded from {HEADLINE_MODEL_DIR}")
   print(f"Using device: {DEVICE}")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-  load_model()
+  load_headline_model()
+  load_article_model()
   yield
 
 
@@ -77,6 +126,17 @@ class StatementRequest(BaseModel):
     }
 
 
+class ArticleRequest(BaseModel):
+  article: str
+
+  class Config:
+    json_schema_extra = {
+      "example": {
+        "article": "A new study published in the Journal of Medicine reveals that drinking water daily can improve overall health. Researchers at Harvard University conducted a 10-year study..."
+      }
+    }
+
+
 class PredictionResponse(BaseModel):
   statement: str
   prediction: str
@@ -94,18 +154,35 @@ class PredictionResponse(BaseModel):
     }
 
 
+class ArticlePredictionResponse(BaseModel):
+  article: str
+  prediction: str
+  confidence: float
+  probabilities: dict
+
+  class Config:
+    json_schema_extra = {
+      "example": {
+        "article": "A new study published in the Journal of Medicine...",
+        "prediction": "Real",
+        "confidence": 0.89,
+        "probabilities": {"fake": 0.11, "real": 0.89},
+      }
+    }
+
+
 @app.get("/")
 async def root():
   return {
     "status": "healthy",
     "message": "Fake News Classifier API is running",
-    "model_loaded": model is not None,
+    "model_loaded": headline_model is not None,
   }
 
 
 @app.post("/predict", response_model=PredictionResponse)
 async def predict(request: StatementRequest):
-  if model is None or tokenizer is None:
+  if headline_model is None or tokenizer is None:
     raise HTTPException(status_code=503, detail="Model not loaded")
 
   if not request.statement.strip():
@@ -127,13 +204,13 @@ async def predict(request: StatementRequest):
   attention_mask = encoding["attention_mask"].to(DEVICE)
 
   with torch.no_grad():
-    outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+    outputs = headline_model(input_ids=input_ids, attention_mask=attention_mask)
     probs = torch.softmax(outputs.logits, dim=1)
     pred_class = torch.argmax(probs, dim=1).item()
 
     prob_fake = probs[0][0].item()
     prob_real = probs[0][1].item()
-    confidence = probs[0][pred_class].item()
+    confidence = probs[0][pred_class].item()  # type: ignore
 
   prediction = "Real" if pred_class == 1 else "Fake"
 
@@ -147,7 +224,7 @@ async def predict(request: StatementRequest):
 
 @app.post("/predict/batch")
 async def predict_batch(statements: list[str]):
-  if model is None or tokenizer is None:
+  if headline_model is None or tokenizer is None:
     raise HTTPException(status_code=503, detail="Model not loaded")
 
   if not statements:
@@ -177,13 +254,13 @@ async def predict_batch(statements: list[str]):
     attention_mask = encoding["attention_mask"].to(DEVICE)
 
     with torch.no_grad():
-      outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+      outputs = headline_model(input_ids=input_ids, attention_mask=attention_mask)
       probs = torch.softmax(outputs.logits, dim=1)
       pred_class = torch.argmax(probs, dim=1).item()
 
       prob_fake = probs[0][0].item()
       prob_real = probs[0][1].item()
-      confidence = probs[0][pred_class].item()
+      confidence = probs[0][pred_class].item()  # type: ignore
 
     prediction = "Real" if pred_class == 1 else "Fake"
 
@@ -193,6 +270,84 @@ async def predict_batch(statements: list[str]):
         "prediction": prediction,
         "confidence": round(confidence, 4),
         "probabilities": {"fake": round(prob_fake, 4), "real": round(prob_real, 4)},
+      }
+    )
+
+  return {"results": results}
+
+
+@app.post("/predict/article", response_model=ArticlePredictionResponse)
+async def predict_article(request: ArticleRequest):
+  if article_model is None or vectorizer is None:
+    raise HTTPException(status_code=503, detail="Article model not loaded")
+
+  if not request.article.strip():
+    raise HTTPException(status_code=400, detail="Article cannot be empty")
+
+  cleaned_text = clean_article(request.article)
+
+  text_vectorized = vectorizer.transform([cleaned_text])
+
+  probabilities = article_model.predict_proba(text_vectorized)[0]
+  pred_class = article_model.predict(text_vectorized)[0]
+
+  prob_fake = probabilities[0]
+  prob_real = probabilities[1]
+  confidence = probabilities[pred_class]
+
+  prediction = "Real" if pred_class == 1 else "Fake"
+
+  return ArticlePredictionResponse(
+    article=request.article[:500] + "..."
+    if len(request.article) > 500
+    else request.article,
+    prediction=prediction,
+    confidence=round(float(confidence), 4),
+    probabilities={
+      "fake": round(float(prob_fake), 4),
+      "real": round(float(prob_real), 4),
+    },
+  )
+
+
+@app.post("/predict/article/batch")
+async def predict_article_batch(articles: list[str]):
+  if article_model is None or vectorizer is None:
+    raise HTTPException(status_code=503, detail="Article model not loaded")
+
+  if not articles:
+    raise HTTPException(status_code=400, detail="Articles list cannot be empty")
+
+  if len(articles) > 50:
+    raise HTTPException(status_code=400, detail="Maximum 50 articles per batch")
+
+  results = []
+  for article in articles:
+    if not article.strip():
+      results.append({"article": article, "error": "Empty article"})
+      continue
+
+    cleaned_text = clean_article(article)
+    text_vectorized = vectorizer.transform([cleaned_text])
+
+    probabilities = article_model.predict_proba(text_vectorized)[0]
+    pred_class = article_model.predict(text_vectorized)[0]
+
+    prob_fake = probabilities[0]
+    prob_real = probabilities[1]
+    confidence = probabilities[pred_class]
+
+    prediction = "Real" if pred_class == 1 else "Fake"
+
+    results.append(
+      {
+        "article": article[:500] + "..." if len(article) > 500 else article,
+        "prediction": prediction,
+        "confidence": round(float(confidence), 4),
+        "probabilities": {
+          "fake": round(float(prob_fake), 4),
+          "real": round(float(prob_real), 4),
+        },
       }
     )
 
