@@ -25,6 +25,24 @@ Figure~\ref{fig:system_architecture} shows the overall system architecture.
     \label{fig:system_architecture}
 \end{figure}
 
+Figure~\ref{fig:model_selection} illustrates the model selection logic, showing how the system routes input to the appropriate model based on content type.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\textwidth]{figures/Model Selection Logic.png}
+    \caption{Model selection logic showing how inputs are routed to the appropriate model based on content type.}
+    \label{fig:model_selection}
+\end{figure}
+
+Figure~\ref{fig:training_architecture} provides an overview of the complete training pipeline, from data sources through processing to the final model artifacts.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\textwidth]{figures/Training Architecture Overview.png}
+    \caption{Training architecture overview showing data sources, processing steps, and output artifacts.}
+    \label{fig:training_architecture}
+\end{figure}
+
 \section{Datasets}
 \label{sec:datasets}
 
@@ -265,7 +283,16 @@ The API provides the following endpoints:
 \subsection{Request/Response Flow}
 \label{subsec:request_flow}
 
-Figure~\ref{fig:request_flow} shows the request/response flow through the API.
+Figure~\ref{fig:backend_api} shows the high-level API processing pipeline from client request to JSON response.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\textwidth]{figures/Backend API.png}
+    \caption{Backend API processing pipeline showing request validation, preprocessing, inference, and response generation.}
+    \label{fig:backend_api}
+\end{figure}
+
+Figure~\ref{fig:request_flow} shows the detailed request/response flow through the API.
 
 \begin{figure}[!ht]
     \centering
