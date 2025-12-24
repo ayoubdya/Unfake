@@ -1,0 +1,212 @@
+\chapter{API Documentation}
+\label{appn:A}
+
+This appendix provides detailed documentation for the UnFake API endpoints.
+
+\section{Base URL}
+\label{sec:base_url}
+
+When running locally, the API is available at:
+\begin{verbatim}
+http://localhost:8000
+\end{verbatim}
+
+\section{Endpoints}
+\label{sec:endpoints}
+
+\subsection{Root Endpoint}
+\label{subsec:root}
+
+\begin{verbatim}
+GET /
+\end{verbatim}
+
+Returns API information and available endpoints.
+
+\textbf{Response:}
+\begin{verbatim}
+{
+  "name": "UnFake API",
+  "version": "1.0.0",
+  "endpoints": {
+    "/predict": "Single headline prediction",
+    "/predict/batch": "Batch headline predictions",
+    "/predict/article": "Single article prediction",
+    "/predict/article/batch": "Batch article predictions"
+  }
+}
+\end{verbatim}
+
+\subsection{Statement Prediction}
+\label{subsec:statement_prediction}
+
+\begin{verbatim}
+POST /predict
+\end{verbatim}
+
+Classifies a single statement as real or fake using the RoBERTa model.
+
+\textbf{Request Body:}
+\begin{verbatim}
+{
+  "text": "string"
+}
+\end{verbatim}
+
+\textbf{Response:}
+\begin{verbatim}
+{
+  "text": "string",
+  "prediction": "real" | "fake",
+  "confidence": float
+}
+\end{verbatim}
+
+\subsection{Batch Statement Prediction}
+\label{subsec:batch_statement}
+
+\begin{verbatim}
+POST /predict/batch
+\end{verbatim}
+
+Classifies multiple statements in a single request.
+
+\textbf{Request Body:}
+\begin{verbatim}
+{
+  "texts": ["string", "string", ...]
+}
+\end{verbatim}
+
+\textbf{Response:}
+\begin{verbatim}
+{
+  "predictions": [
+    {
+      "text": "string",
+      "prediction": "real" | "fake",
+      "confidence": float
+    },
+    ...
+  ]
+}
+\end{verbatim}
+
+\subsection{Article Prediction}
+\label{subsec:article_prediction}
+
+\begin{verbatim}
+POST /predict/article
+\end{verbatim}
+
+Classifies a single article as real or fake using the Gradient Boosting model.
+
+\textbf{Request Body:}
+\begin{verbatim}
+{
+  "text": "string"
+}
+\end{verbatim}
+
+\textbf{Response:}
+\begin{verbatim}
+{
+  "text": "string (truncated)",
+  "prediction": "real" | "fake",
+  "confidence": float
+}
+\end{verbatim}
+
+\subsection{Batch Article Prediction}
+\label{subsec:batch_article}
+
+\begin{verbatim}
+POST /predict/article/batch
+\end{verbatim}
+
+Classifies multiple articles in a single request.
+
+\textbf{Request Body:}
+\begin{verbatim}
+{
+  "texts": ["string", "string", ...]
+}
+\end{verbatim}
+
+\textbf{Response:}
+\begin{verbatim}
+{
+  "predictions": [
+    {
+      "text": "string (truncated)",
+      "prediction": "real" | "fake",
+      "confidence": float
+    },
+    ...
+  ]
+}
+\end{verbatim}
+
+\section{Error Responses}
+\label{sec:errors}
+
+All endpoints may return the following error responses:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{Code} & \textbf{Status} & \textbf{Description} \\
+\hline
+400 & Bad Request & Invalid request body \\
+422 & Unprocessable Entity & Validation error \\
+500 & Internal Server Error & Server-side error \\
+\hline
+\end{tabular}
+\caption{API Error Codes}
+\label{tab:error_codes}
+\end{table}
+
+\section{Example Usage}
+\label{sec:example_usage}
+
+\subsection{cURL Example}
+\label{subsec:curl}
+
+\begin{verbatim}
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Scientists discover new planet"}'
+\end{verbatim}
+
+\subsection{Python Example}
+\label{subsec:python}
+
+\begin{verbatim}
+import requests
+
+response = requests.post(
+    "http://localhost:8000/predict",
+    json={"text": "Scientists discover new planet"}
+)
+result = response.json()
+print(f"Prediction: {result['prediction']}")
+print(f"Confidence: {result['confidence']:.2%}")
+\end{verbatim}
+
+\subsection{JavaScript Example}
+\label{subsec:javascript}
+
+\begin{verbatim}
+fetch('http://localhost:8000/predict', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({text: 'Scientists discover new planet'})
+})
+.then(response => response.json())
+.then(data => {
+  console.log('Prediction:', data.prediction);
+  console.log('Confidence:', data.confidence);
+});
+\end{verbatim}
+

@@ -1,0 +1,213 @@
+\chapter{Results}
+\label{ch:results}
+
+This chapter presents the results of training and evaluating the machine learning models used in the UnFake system. The performance of both the headline model (RoBERTa) and the article model (Gradient Boosting) are reported using standard classification metrics.
+
+\section{Headline Model Results}
+\label{sec:headline_results}
+
+The headline model was trained on 25,999 PolitiFact statements and evaluated on a held-out test set of 2,600 statements.
+
+\subsection{Classification Performance}
+\label{subsec:headline_classification}
+
+Table~\ref{tab:headline_classification} shows the detailed classification report for the headline model on the test set.
+
+\begin{table}[!ht]
+    \centering
+    \caption{Headline Model Classification Report}
+    \label{tab:headline_classification}
+    \begin{tabular}{lcccc}
+        \toprule
+        Class & Precision & Recall & F1-Score & Support \\
+        \midrule
+        Fake (0) & 0.85 & 0.71 & 0.78 & 1598 \\
+        Real (1) & 0.64 & 0.80 & 0.71 & 1002 \\
+        \midrule
+        Accuracy & & & 0.75 & 2600 \\
+        Macro Avg & 0.74 & 0.76 & 0.74 & 2600 \\
+        Weighted Avg & 0.77 & 0.75 & 0.75 & 2600 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The key metrics for the headline model are:
+\begin{itemize}
+    \item \textbf{Accuracy:} 74.69\%
+    \item \textbf{F1 Score:} 75.02\%
+    \item \textbf{Precision:} 76.82\%
+    \item \textbf{Recall:} 74.69\%
+    \item \textbf{ROC-AUC Score:} 83.17\%
+\end{itemize}
+
+\subsection{Confusion Matrix and ROC Curve}
+\label{subsec:headline_confusion}
+
+Figure~\ref{fig:headline_confusion} shows the confusion matrix and ROC-AUC curve for the headline model. The confusion matrix reveals that the model correctly identifies 71\% of fake statements and 80\% of real statements. The ROC-AUC score of 0.8317 indicates good discriminative ability between the two classes.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\textwidth]{figures/Headline Model Confusion Matrix and ROC-AUC Curve.png}
+    \caption{Headline model confusion matrix and ROC-AUC curve showing model performance on the test set.}
+    \label{fig:headline_confusion}
+\end{figure}
+
+\subsection{Training History}
+\label{subsec:headline_training_history}
+
+The training history showing loss, accuracy, and F1 score over epochs was presented in Chapter~\ref{ch:method} (Figure~\ref{fig:headline_training}). The model showed steady improvement during training, with the validation metrics plateauing after several epochs.
+
+\section{Article Model Results}
+\label{sec:article_results}
+
+The article model was trained on 44,898 news articles (33,673 for training, 11,225 for testing).
+
+\subsection{Classification Performance}
+\label{subsec:article_classification}
+
+Table~\ref{tab:article_classification} shows the detailed classification report for the article model on the test set.
+
+\begin{table}[!ht]
+    \centering
+    \caption{Article Model Classification Report}
+    \label{tab:article_classification}
+    \begin{tabular}{lcccc}
+        \toprule
+        Class & Precision & Recall & F1-Score & Support \\
+        \midrule
+        Fake (0) & 1.00 & 0.99 & 1.00 & 5886 \\
+        Real (1) & 0.99 & 1.00 & 1.00 & 5339 \\
+        \midrule
+        Accuracy & & & 1.00 & 11225 \\
+        Macro Avg & 1.00 & 1.00 & 1.00 & 11225 \\
+        Weighted Avg & 1.00 & 1.00 & 1.00 & 11225 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The article model achieves excellent performance:
+\begin{itemize}
+    \item \textbf{Model Score (Accuracy):} 99.57\%
+    \item \textbf{Precision:} 99-100\% for both classes
+    \item \textbf{Recall:} 99-100\% for both classes
+    \item \textbf{F1 Score:} 100\% for both classes
+\end{itemize}
+
+\subsection{Confusion Matrix}
+\label{subsec:article_confusion}
+
+Figure~\ref{fig:article_confusion} shows the confusion matrix for the article model. The near-perfect classification is evident, with only a small number of misclassifications in each class.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/Article Model Confusion Matrix.png}
+    \caption{Article model confusion matrix showing near-perfect classification on the test set.}
+    \label{fig:article_confusion}
+\end{figure}
+
+\subsection{Model Comparison}
+\label{subsec:article_comparison}
+
+During development, multiple classification algorithms were evaluated for the article model. Figure~\ref{fig:model_comparison} in Chapter~\ref{ch:method} shows the comparison. The Gradient Boosting Classifier was selected as it provided the best performance.
+
+\section{Model Performance Comparison}
+\label{sec:model_comparison}
+
+Table~\ref{tab:model_comparison} compares the two models side by side.
+
+\begin{table}[!ht]
+    \centering
+    \caption{Comparison of Headline and Article Models}
+    \label{tab:model_comparison}
+    \begin{tabular}{lcc}
+        \toprule
+        Metric & Headline Model & Article Model \\
+        \midrule
+        Dataset Size & 25,999 & 44,898 \\
+        Test Set Size & 2,600 & 11,225 \\
+        Accuracy & 74.69\% & 99.57\% \\
+        F1 Score & 75.02\% & ~100\% \\
+        Precision (Weighted) & 76.82\% & ~100\% \\
+        Recall (Weighted) & 74.69\% & ~100\% \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The significant difference in performance between the two models can be explained by several factors:
+
+\begin{enumerate}
+    \item \textbf{Text length:} Articles provide much more textual content for the model to analyze, allowing for better feature extraction.
+    
+    \item \textbf{Task complexity:} Classifying short statements is inherently more difficult because they often lack context.
+    
+    \item \textbf{Dataset characteristics:} The article dataset may have clearer patterns distinguishing fake from real news.
+    
+    \item \textbf{Model suitability:} TF-IDF with Gradient Boosting works particularly well for document-level classification.
+\end{enumerate}
+
+\section{API Response Times}
+\label{sec:api_response}
+
+The system was tested for response times to ensure it provides a good user experience. Table~\ref{tab:response_times} shows typical response times for different operations.
+
+\begin{table}[!ht]
+    \centering
+    \caption{API Response Times}
+    \label{tab:response_times}
+    \begin{tabular}{lc}
+        \toprule
+        Operation & Typical Response Time \\
+        \midrule
+        Health Check (\texttt{/}) & $<$ 10ms \\
+        Statement Classification (\texttt{/predict}) & 50-100ms \\
+        Article Classification (\texttt{/predict/article}) & 20-50ms \\
+        Batch Statement (10 items) & 200-500ms \\
+        Batch Article (10 items) & 100-300ms \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The article model provides faster inference because:
+\begin{itemize}
+    \item TF-IDF vectorization and Gradient Boosting are computationally lighter than transformer models
+    \item The headline model runs on GPU when available, but transformer inference still takes more time
+\end{itemize}
+
+\section{Example Predictions}
+\label{sec:example_predictions}
+
+To demonstrate the system's capabilities, Table~\ref{tab:example_predictions} shows some example predictions from the headline model.
+
+\begin{table}[!ht]
+    \centering
+    \caption{Example Statement Predictions}
+    \label{tab:example_predictions}
+    \begin{tabular}{p{8cm}cc}
+        \toprule
+        Statement & Prediction & Confidence \\
+        \midrule
+        ``Scientists confirm that regular exercise improves cardiovascular health.'' & Real & 92\% \\
+        ``COVID-19 vaccines contain microchips for government tracking.'' & Fake & 89\% \\
+        ``The Earth revolves around the Sun.'' & Real & 95\% \\
+        ``5G towers cause coronavirus infections.'' & Fake & 87\% \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Summary}
+\label{sec:results_summary}
+
+The results demonstrate that:
+
+\begin{itemize}
+    \item The headline model achieves 74.69\% accuracy with an ROC-AUC of 83.17\%, showing reasonable performance for the challenging task of short statement classification.
+    
+    \item The article model achieves 99.57\% accuracy, demonstrating excellent performance for full-length news article classification.
+    
+    \item The dual-model approach is effective, with each model optimized for its specific content type.
+    
+    \item The API provides fast response times suitable for real-time web application use.
+\end{itemize}
+
+
+

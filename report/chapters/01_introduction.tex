@@ -1,0 +1,130 @@
+\chapter{Introduction}
+\label{ch:into}
+
+In today's digital age, the spread of false information has become one of the most pressing challenges facing society. Fake news, which refers to intentionally misleading or false information presented as legitimate news, spreads rapidly through social media platforms and online news sources. This misinformation can have serious consequences, from influencing election outcomes to causing public health crises. The need for automated tools to detect and flag fake news has never been more important.
+
+This project presents UnFake, an AI-powered fake news detection system that uses machine learning to classify news content as either ``Fake'' or ``Real.'' The system combines modern deep learning techniques with traditional machine learning approaches to provide accurate predictions for both short statements and full-length articles.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Background}
+\label{sec:into_back}
+
+The term ``fake news'' gained widespread attention during the 2016 United States presidential election, when false stories spread rapidly on social media platforms. However, the problem of misinformation is not new. What has changed is the speed and scale at which false information can now spread through digital channels.
+
+Social media platforms like Facebook, Twitter, and WhatsApp have made it easy for anyone to share content with millions of people instantly. While this has many benefits for communication and access to information, it also creates opportunities for bad actors to spread false information. Studies have shown that fake news spreads faster than true news on social media, partly because false stories are often more sensational and emotionally engaging.
+
+The consequences of fake news can be severe. During the COVID-19 pandemic, misinformation about treatments and vaccines contributed to public health problems. In politics, fake news has been used to manipulate public opinion and undermine trust in democratic institutions. In financial markets, false information can cause stock prices to swing wildly, affecting investors and companies alike.
+
+Traditional fact-checking by journalists is effective but slow and cannot keep up with the volume of content produced online. This has created a need for automated systems that can quickly analyze news content and flag potentially false information for human review.
+
+Machine learning offers a promising approach to this problem. By training models on large datasets of verified true and false news, these systems can learn patterns that distinguish real news from fake news. Natural Language Processing (NLP) techniques allow these models to understand the content of text and make predictions based on linguistic features, writing style, and other characteristics.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem Statement}
+\label{sec:intro_prob_art}
+
+The main problem addressed by this project is: \textbf{How can we automatically classify news content as real or fake using machine learning techniques?}
+
+This problem involves several challenges:
+
+\begin{enumerate}
+    \item \textbf{Different content types:} News appears in different formats, from short headlines and social media posts to full-length articles. A system needs to handle both types effectively.
+    
+    \item \textbf{Evolving tactics:} Creators of fake news constantly adapt their methods to avoid detection, meaning models may need regular updates to remain effective.
+    
+    \item \textbf{Context dependence:} The same statement might be true in one context and false in another, making classification challenging.
+    
+    \item \textbf{Bias in training data:} Datasets used for training may contain biases that could affect model performance.
+    
+    \item \textbf{User accessibility:} The system should be easy to use for non-technical users who want to verify news content.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Aims and Objectives}
+\label{sec:intro_aims_obj}
+
+\subsection{Aim}
+The aim of this project is to develop a complete fake news detection system that can accurately classify news content as real or fake, and provide this functionality through an easy-to-use web interface.
+
+\subsection{Objectives}
+To achieve this aim, the following objectives were set:
+
+\begin{enumerate}
+    \item \textbf{Data collection and preparation:} Gather and preprocess datasets containing labeled examples of real and fake news for model training.
+    
+    \item \textbf{Headline model development:} Train a deep learning model using transformer architecture (RoBERTa) to classify short statements and headlines.
+    
+    \item \textbf{Article model development:} Train a traditional machine learning model (Gradient Boosting) to classify full-length news articles.
+    
+    \item \textbf{API development:} Create a REST API using FastAPI to serve model predictions to client applications.
+    
+    \item \textbf{Frontend development:} Build a user-friendly web interface that allows users to input text and receive classification results.
+    
+    \item \textbf{System integration:} Integrate all components into a complete, working system.
+    
+    \item \textbf{Evaluation:} Evaluate model performance using appropriate metrics such as accuracy, precision, recall, and F1 score.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Solution Approach}
+\label{sec:intro_sol}
+
+The solution uses a dual-model approach to handle different types of content effectively:
+
+\subsection{Headline Model}
+\label{sec:intro_headline_model}
+For short statements and headlines, a fine-tuned RoBERTa (Robustly Optimized BERT Pretraining Approach) transformer model is used. RoBERTa is a variant of BERT that has been trained on a larger dataset with improved training methodology. The model was fine-tuned on a dataset of fact-checked statements from PolitiFact, a respected fact-checking organization. This approach leverages the power of transfer learning, where a model pre-trained on a large corpus of text is adapted for a specific task.
+
+\subsection{Article Model}
+\label{sec:intro_article_model}
+For full-length articles, a Gradient Boosting Classifier combined with TF-IDF (Term Frequency-Inverse Document Frequency) vectorization is used. This traditional machine learning approach works well for longer texts where the bag-of-words representation can capture important patterns. The model was trained on a dataset of over 44,000 news articles labeled as real or fake.
+
+\subsection{System Architecture}
+\label{sec:intro_architecture}
+The complete system follows a three-tier architecture:
+\begin{itemize}
+    \item \textbf{Frontend:} A web application built with HTML, CSS, and JavaScript that provides the user interface.
+    \item \textbf{Backend:} A FastAPI application that handles requests, preprocesses text, and runs model inference.
+    \item \textbf{Models:} The trained machine learning models stored as files and loaded into memory at startup.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Summary of Contributions and Achievements}
+\label{sec:intro_sum_results}
+
+The main contributions and achievements of this project are:
+
+\begin{enumerate}
+    \item \textbf{Dual-model system:} Development of a system that uses two different models optimized for different content types, achieving 74.69\% accuracy on headlines and 99.57\% accuracy on articles.
+    
+    \item \textbf{Complete web application:} Implementation of a full-stack web application with an intuitive user interface for analyzing news content.
+    
+    \item \textbf{REST API:} Creation of a well-documented API that can be used by other applications to access the fake news detection functionality.
+    
+    \item \textbf{Data pipeline:} Development of data collection tools, including a web scraper for PolitiFact to gather fact-checked statements.
+    
+    \item \textbf{Comprehensive evaluation:} Thorough evaluation of model performance with detailed metrics and analysis.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Organization of the Report}
+\label{sec:intro_org}
+
+This report is organized into seven chapters:
+
+\begin{itemize}
+    \item \textbf{Chapter~\ref{ch:into} (Introduction):} Provides background information, problem statement, aims and objectives, and an overview of the solution approach.
+    
+    \item \textbf{Chapter~\ref{ch:lit_rev} (Literature Review):} Reviews existing research on fake news detection, natural language processing, and machine learning techniques relevant to this project.
+    
+    \item \textbf{Chapter~\ref{ch:method} (Methodology):} Describes the datasets used, the machine learning models developed, and the system architecture in detail.
+    
+    \item \textbf{Chapter~\ref{ch:results} (Results):} Presents the performance of the trained models and demonstrates the working system.
+    
+    \item \textbf{Chapter~\ref{ch:evaluation} (Discussion and Analysis):} Analyzes the results, discusses their significance, and examines the limitations of the approach.
+    
+    \item \textbf{Chapter~\ref{ch:con} (Conclusions and Future Work):} Summarizes the project findings and suggests directions for future development.
+    
+    \item \textbf{Chapter~\ref{ch:reflection} (Reflection):} Reflects on the learning experience and challenges encountered during the project.
+\end{itemize}
+

@@ -1,0 +1,185 @@
+\chapter{Project Setup Guide}
+\label{appn:B}
+
+This appendix provides instructions for setting up and running the UnFake system.
+
+\section{Prerequisites}
+\label{sec:prerequisites}
+
+\begin{itemize}
+    \item Python 3.8 or higher
+    \item pip (Python package manager)
+    \item CUDA-capable GPU (optional, for faster inference)
+    \item Git (for cloning the repository)
+\end{itemize}
+
+\section{Installation}
+\label{sec:installation}
+
+\subsection{Clone the Repository}
+\label{subsec:clone}
+
+\begin{verbatim}
+git clone https://github.com/username/unfake.git
+cd unfake
+\end{verbatim}
+
+\subsection{Create Virtual Environment}
+\label{subsec:venv}
+
+\begin{verbatim}
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+# or
+.\venv\Scripts\activate   # Windows
+\end{verbatim}
+
+\subsection{Install Dependencies}
+\label{subsec:deps}
+
+\begin{verbatim}
+pip install -r requirements.txt
+\end{verbatim}
+
+Required packages include:
+\begin{itemize}
+    \item torch
+    \item transformers
+    \item scikit-learn
+    \item pandas
+    \item numpy
+    \item nltk
+    \item fastapi
+    \item uvicorn
+    \item beautifulsoup4
+    \item requests
+\end{itemize}
+
+\section{Running the API}
+\label{sec:running_api}
+
+Start the FastAPI server:
+
+\begin{verbatim}
+cd api
+uvicorn main:app --reload --port 8000
+\end{verbatim}
+
+The API will be available at \texttt{http://localhost:8000}.
+
+Access the interactive API documentation at \texttt{http://localhost:8000/docs}.
+
+\section{Running the Frontend}
+\label{sec:running_frontend}
+
+The frontend can be served using any static file server. For development:
+
+\begin{verbatim}
+cd frontend
+python -m http.server 3000
+\end{verbatim}
+
+Access the frontend at \texttt{http://localhost:3000}.
+
+\section{Training Models}
+\label{sec:training}
+
+\subsection{Download Training Data}
+\label{subsec:download_data}
+
+\begin{verbatim}
+cd data
+python download.py
+\end{verbatim}
+
+\subsection{Train Headline Model}
+\label{subsec:train_headline}
+
+Open and run all cells in \texttt{notebooks/train\_headline.ipynb}.
+
+Training parameters:
+\begin{itemize}
+    \item Epochs: 5
+    \item Batch size: 16
+    \item Learning rate: 2e-5
+    \item Max sequence length: 256
+\end{itemize}
+
+\subsection{Train Article Model}
+\label{subsec:train_article}
+
+Open and run all cells in \texttt{notebooks/train\_article.ipynb}.
+
+Training parameters:
+\begin{itemize}
+    \item TF-IDF max features: 10,000
+    \item n-gram range: (1, 2)
+    \item Gradient Boosting estimators: 100
+\end{itemize}
+
+\section{Data Collection}
+\label{sec:data_collection}
+
+To collect new fact-checked statements from PolitiFact:
+
+\begin{verbatim}
+cd scraper
+python politifact.py
+\end{verbatim}
+
+This will scrape statements and save them to a CSV file.
+
+\section{Project Structure}
+\label{sec:structure}
+
+\begin{verbatim}
+unfake/
+├── api/
+│   ├── main.py            # FastAPI application
+│   ├── text_processing.py # Text preprocessing
+│   └── types.py           # Pydantic models
+├── data/
+│   ├── download.py        # Data download script
+│   ├── LIAR/              # LIAR dataset
+│   ├── True_Fake/         # Article dataset
+│   └── RoBERTa_Classifier/ # Trained model
+├── frontend/
+│   ├── index.html         # Main HTML page
+│   ├── styles.css         # Stylesheet
+│   └── app.js             # JavaScript logic
+├── notebooks/
+│   ├── train_headline.ipynb  # Headline model training
+│   └── train_article.ipynb   # Article model training
+├── scraper/
+│   └── politifact.py      # PolitiFact scraper
+└── report/                # LaTeX report files
+\end{verbatim}
+
+\section{Troubleshooting}
+\label{sec:troubleshooting}
+
+\subsection{CUDA Out of Memory}
+\label{subsec:cuda_oom}
+
+If you encounter GPU memory errors:
+\begin{itemize}
+    \item Reduce batch size in training notebooks
+    \item Set \texttt{CUDA\_VISIBLE\_DEVICES=""} to use CPU
+\end{itemize}
+
+\subsection{Model Loading Errors}
+\label{subsec:model_errors}
+
+Ensure all model files are present in \texttt{data/RoBERTa\_Classifier/}:
+\begin{itemize}
+    \item model.safetensors
+    \item config.json
+    \item tokenizer.json
+    \item vocab.json
+    \item merges.txt
+\end{itemize}
+
+\subsection{CORS Errors}
+\label{subsec:cors}
+
+If the frontend cannot connect to the API, ensure CORS is properly configured in \texttt{api/main.py}.

@@ -1,0 +1,166 @@
+\chapter{Literature Review}
+\label{ch:lit_rev}
+
+This chapter reviews existing research and technologies related to fake news detection, natural language processing, and the machine learning techniques used in this project. Understanding the current state of the field helps to position the UnFake system within the broader context of fake news detection research.
+
+\section{Understanding Fake News}
+\label{sec:understanding_fake_news}
+
+Fake news can be defined as intentionally false or misleading information presented as legitimate news. However, the term covers a spectrum of different types of misinformation~\citep{shu2017fake}:
+
+\begin{itemize}
+    \item \textbf{Satire and parody:} Content that is not intended to cause harm but uses humor and exaggeration. This is usually clearly labeled as satire.
+    
+    \item \textbf{Misleading content:} Information that uses misleading framing of issues or individuals.
+    
+    \item \textbf{Imposter content:} Content that impersonates genuine news sources.
+    
+    \item \textbf{Fabricated content:} Completely false content designed to deceive.
+    
+    \item \textbf{False context:} Genuine content shared with false contextual information.
+    
+    \item \textbf{Manipulated content:} Genuine information or imagery that has been altered to deceive.
+\end{itemize}
+
+The spread of fake news is driven by several factors. Social media algorithms often prioritize engaging content, which tends to be sensational and emotionally provocative. People are more likely to share content that aligns with their existing beliefs, a phenomenon known as confirmation bias. Additionally, the speed of online communication means that false information can spread widely before fact-checkers have time to verify it.
+
+\section{Natural Language Processing for Text Classification}
+\label{sec:nlp_text_classification}
+
+Natural Language Processing (NLP) is a field of artificial intelligence that focuses on enabling computers to understand and process human language. Text classification is a fundamental NLP task where the goal is to assign predefined categories to text documents.
+
+\subsection{Traditional Approaches}
+\label{subsec:traditional_approaches}
+
+Traditional text classification approaches typically involve two main steps: feature extraction and classification.
+
+\textbf{Feature extraction} converts text into numerical representations that machine learning algorithms can process. Common techniques include:
+
+\begin{itemize}
+    \item \textbf{Bag of Words (BoW):} Represents text as a collection of word counts, ignoring grammar and word order.
+    
+    \item \textbf{TF-IDF (Term Frequency-Inverse Document Frequency):} Weights words by how important they are to a document relative to the entire corpus. Words that appear frequently in a document but rarely in others receive higher weights.
+    
+    \item \textbf{N-grams:} Captures sequences of n consecutive words, preserving some word order information.
+\end{itemize}
+
+\textbf{Classification algorithms} commonly used for text classification include:
+
+\begin{itemize}
+    \item \textbf{Naive Bayes:} A probabilistic classifier based on Bayes' theorem, assuming independence between features.
+    
+    \item \textbf{Support Vector Machines (SVM):} Finds the optimal hyperplane that separates different classes in the feature space.
+    
+    \item \textbf{Random Forest:} An ensemble method that builds multiple decision trees and combines their predictions.
+    
+    \item \textbf{Gradient Boosting:} An ensemble technique that builds trees sequentially, with each tree correcting the errors of the previous ones. This approach is used in the UnFake article model.
+\end{itemize}
+
+\subsection{Deep Learning Approaches}
+\label{subsec:deep_learning_approaches}
+
+Deep learning has revolutionized NLP in recent years. Key developments include:
+
+\textbf{Word embeddings} such as Word2Vec and GloVe represent words as dense vectors where semantically similar words are close together in the vector space.
+
+\textbf{Recurrent Neural Networks (RNNs)} and their variants (LSTM, GRU) can process sequences of text, maintaining memory of previous words in the sequence.
+
+\textbf{Transformer architecture}, introduced in the paper ``Attention Is All You Need''~\citep{vaswani2017attention}, uses self-attention mechanisms to process entire sequences in parallel, leading to significant improvements in NLP tasks.
+
+\textbf{Pre-trained language models} like BERT (Bidirectional Encoder Representations from Transformers)~\citep{devlin2019bert} and its variants have achieved state-of-the-art results on many NLP benchmarks. These models are pre-trained on large text corpora and can be fine-tuned for specific tasks with relatively small amounts of labeled data.
+
+\section{Transformer Models and RoBERTa}
+\label{sec:transformers_roberta}
+
+The transformer architecture has become the foundation for modern NLP. Unlike RNNs, transformers process all positions in a sequence simultaneously using attention mechanisms. This allows them to capture long-range dependencies in text more effectively.
+
+BERT (Bidirectional Encoder Representations from Transformers) was a breakthrough in NLP~\citep{devlin2019bert}. It uses bidirectional training, meaning it considers context from both directions (left and right) when understanding a word. BERT is pre-trained on two tasks: masked language modeling (predicting masked words) and next sentence prediction.
+
+RoBERTa (Robustly Optimized BERT Pretraining Approach)~\citep{liu2019roberta} improves on BERT in several ways:
+
+\begin{itemize}
+    \item Training on more data for longer periods
+    \item Removing the next sentence prediction task
+    \item Using longer sequences during training
+    \item Dynamically changing the masking pattern during training
+\end{itemize}
+
+These modifications result in better performance on many downstream tasks. RoBERTa is particularly effective for text classification tasks, making it a good choice for the headline model in UnFake.
+
+\section{Existing Fake News Detection Systems}
+\label{sec:existing_systems}
+
+Several approaches to automated fake news detection have been developed:
+
+\subsection{Content-Based Methods}
+\label{subsec:content_based}
+
+Content-based methods analyze the text of news articles to detect fake news. Features that have been found useful include:
+
+\begin{itemize}
+    \item Writing style and quality
+    \item Sentiment and emotional language
+    \item Use of sensational or exaggerated claims
+    \item Presence of specific linguistic patterns
+\end{itemize}
+
+Research has shown that fake news often uses more emotional and sensational language than real news. The writing style may also be different, with fake news sometimes having lower grammatical quality.
+
+\subsection{Social Context Methods}
+\label{subsec:social_context}
+
+Social context methods examine how content spreads on social networks. Features include:
+
+\begin{itemize}
+    \item User profiles and credibility
+    \item Sharing patterns and network structure
+    \item User engagement and reactions
+    \item Propagation speed and patterns
+\end{itemize}
+
+These methods can be effective because fake news often spreads differently than real news, with different user engagement patterns.
+
+\subsection{Knowledge-Based Methods}
+\label{subsec:knowledge_based}
+
+Knowledge-based methods compare claims against verified knowledge bases or fact-checking databases. These approaches can be highly accurate but are limited to claims for which verified information exists.
+
+\section{Gradient Boosting for Classification}
+\label{sec:gradient_boosting}
+
+Gradient Boosting is an ensemble learning method that combines multiple weak learners (typically decision trees) to create a strong classifier. The key ideas are:
+
+\begin{enumerate}
+    \item Start with an initial prediction (often the mean for regression or log-odds for classification)
+    \item Calculate the residuals (errors) of the current model
+    \item Fit a new tree to predict these residuals
+    \item Add the new tree's predictions to the model (scaled by a learning rate)
+    \item Repeat steps 2-4 for a specified number of iterations
+\end{enumerate}
+
+The ``gradient'' in gradient boosting refers to the use of gradient descent optimization to minimize a loss function. Each new tree is fit to the negative gradient of the loss function with respect to the current predictions.
+
+Gradient Boosting works well for many classification tasks, including text classification with TF-IDF features. It is particularly effective when:
+
+\begin{itemize}
+    \item The relationship between features and target is complex
+    \item Feature interactions are important
+    \item The dataset is not too large (deep learning may be better for very large datasets)
+\end{itemize}
+
+For the UnFake article model, Gradient Boosting combined with TF-IDF achieves excellent performance, demonstrating that traditional machine learning methods remain competitive for certain tasks.
+
+\section{Summary}
+\label{sec:lit_summary}
+
+This literature review has covered the key concepts and technologies relevant to the UnFake fake news detection system:
+
+\begin{itemize}
+    \item Fake news is a complex problem with various types of misinformation
+    \item NLP techniques, from traditional TF-IDF to modern transformers, enable machines to understand and classify text
+    \item Transformer models like RoBERTa have achieved state-of-the-art results in text classification
+    \item Multiple approaches exist for fake news detection, including content-based, social context, and knowledge-based methods
+    \item Gradient Boosting is an effective traditional machine learning method for text classification
+\end{itemize}
+
+The UnFake system combines modern deep learning (RoBERTa for headlines) with traditional machine learning (Gradient Boosting for articles) to provide a comprehensive solution for fake news detection.

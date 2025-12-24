@@ -1,0 +1,23 @@
+%Two resources useful for abstract writing.
+% Guidance of how to write an abstract/summary provided by Nature: https://cbs.umn.edu/sites/cbs.umn.edu/files/public/downloads/Annotated_Nature_abstract.pdf %https://writingcenter.gmu.edu/guides/writing-an-abstract
+\chapter*{\center \Large  Abstract}
+
+The spread of fake news on social media and online platforms has become a major problem in today's digital world. False information can influence public opinion, affect elections, and cause harm to individuals and society. This project presents UnFake, an AI-powered fake news detection system that uses machine learning to classify news content as either ``Fake'' or ``Real.''
+
+The system uses two different machine learning models to handle different types of content. For short statements and headlines, a fine-tuned RoBERTa transformer model is used, which achieves an accuracy of 74.69\% and an F1 score of 75.02\% on the test set. For longer articles, a Gradient Boosting Classifier combined with TF-IDF vectorization is used, achieving an impressive accuracy of 99.57\%. The dual-model approach allows the system to handle both short claims and full news articles effectively.
+
+The project includes a complete web application with a FastAPI backend and a modern frontend interface. Users can input statements or articles through the web interface and receive instant predictions with confidence scores. The system was trained on multiple datasets including PolitiFact fact-checked statements and news article datasets containing over 44,000 articles.
+
+The results show that machine learning can be an effective tool for detecting fake news, especially for longer articles where the model achieves near-perfect accuracy. The headline model shows more modest performance, reflecting the challenge of classifying short statements with limited context. Future work could focus on improving the headline model's accuracy and adding support for multiple languages.
+
+~\\[1cm]
+\noindent
+\textbf{Keywords:} fake news detection, machine learning, natural language processing, RoBERTa, gradient boosting
+
+\vfill
+\noindent
+\textbf{Report's total word count:} [To be calculated] \newline
+\newline
+\noindent
+\textbf{GitLab Repository:} [Insert your GitLab repository URL here]
+
