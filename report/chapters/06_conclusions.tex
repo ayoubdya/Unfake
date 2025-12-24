@@ -4,127 +4,20 @@
 \section{Conclusions}
 \label{sec:conclusions}
 
-This project developed UnFake, an AI-powered fake news detection system that classifies news content as real or fake using machine learning techniques. The system successfully addresses the growing need for automated tools to combat misinformation in the digital age.
+This project developed UnFake, an AI-powered fake news detection system using machine learning. All objectives were achieved: a RoBERTa-based headline model (74.69\% accuracy, 83.17\% ROC-AUC), a Gradient Boosting article model (99.57\% accuracy), a FastAPI backend, and a user-friendly web interface.
 
-\subsection{Achievement of Objectives}
-\label{subsec:objectives_achieved}
-
-All objectives set out in Chapter~\ref{ch:into} were achieved:
-
-\begin{enumerate}
-    \item \textbf{Data collection and preparation:} A web scraper was developed to collect over 25,000 fact-checked statements from PolitiFact. Additionally, a dataset of 44,898 news articles was preprocessed for model training.
-    
-    \item \textbf{Headline model development:} A fine-tuned RoBERTa transformer model was trained, achieving 74.69\% accuracy and 83.17\% ROC-AUC on the test set.
-    
-    \item \textbf{Article model development:} A Gradient Boosting Classifier with TF-IDF vectorization was trained, achieving 99.57\% accuracy on the test set.
-    
-    \item \textbf{API development:} A complete REST API was built using FastAPI, providing endpoints for single and batch predictions for both statements and articles.
-    
-    \item \textbf{Frontend development:} A user-friendly web interface was created with HTML, CSS, and JavaScript, allowing users to easily analyze news content.
-    
-    \item \textbf{System integration:} All components were integrated into a working system with proper model loading, request handling, and result presentation.
-    
-    \item \textbf{Evaluation:} Comprehensive evaluation was performed using accuracy, precision, recall, F1 score, and ROC-AUC metrics.
-\end{enumerate}
-
-\subsection{Key Findings}
-\label{subsec:key_findings}
-
-The project revealed several important findings:
-
-\begin{itemize}
-    \item \textbf{Content type matters:} Different content types (headlines vs. articles) require different approaches. The dual-model strategy proved effective for handling both.
-    
-    \item \textbf{Deep learning for short text:} Transformer models like RoBERTa are well-suited for short statement classification, leveraging pre-trained language understanding.
-    
-    \item \textbf{Traditional ML for long text:} Gradient Boosting with TF-IDF remains highly effective for document-level classification, often outperforming complex deep learning approaches.
-    
-    \item \textbf{Classification difficulty:} Short statements are inherently more difficult to classify than full articles due to limited context.
-    
-    \item \textbf{Practical deployment:} Modern web frameworks like FastAPI enable rapid development of production-ready machine learning APIs.
-\end{itemize}
-
-\subsection{Contributions}
-\label{subsec:contributions}
-
-The main contributions of this project are:
-
-\begin{enumerate}
-    \item A complete, working fake news detection system that can be deployed and used in practice.
-    
-    \item A dual-model architecture that optimizes performance for different content types.
-    
-    \item A reusable data collection pipeline for gathering fact-checked statements.
-    
-    \item Demonstration that combining modern deep learning with traditional machine learning can be effective for NLP applications.
-    
-    \item An accessible web interface that makes fake news detection technology available to non-technical users.
-\end{enumerate}
+Key findings include: different content types require different approaches; transformers work well for short text while traditional ML excels at document classification; and modern frameworks like FastAPI enable rapid ML API development.
 
 \section{Future Work}
 \label{sec:future_work}
 
-While the UnFake system meets its objectives, several areas for future development have been identified:
-
-\subsection{Model Improvements}
-\label{subsec:model_improvements}
-
+Future improvements could include:
 \begin{itemize}
-    \item \textbf{Larger transformer models:} Experimenting with larger models like RoBERTa-large or DeBERTa could improve headline classification accuracy.
-    
-    \item \textbf{Ensemble methods:} Combining multiple models could improve robustness and reduce errors.
-    
-    \item \textbf{Multi-task learning:} Training models to predict both veracity and fine-grained truth ratings (e.g., ``mostly true,'' ``half true'') could provide more nuanced output.
-    
-    \item \textbf{Explainability:} Adding attention visualization or LIME/SHAP explanations would help users understand why predictions are made.
+    \item Larger transformer models (RoBERTa-large, DeBERTa) for better headline accuracy
+    \item Multi-language support for global applicability
+    \item Browser extension for seamless user experience
+    \item Explainability features using attention visualization or SHAP
+    \item Continuous training pipelines to adapt to evolving misinformation tactics
 \end{itemize}
 
-\subsection{Feature Enhancements}
-\label{subsec:feature_enhancements}
-
-\begin{itemize}
-    \item \textbf{Multi-language support:} Extending the system to support languages beyond English would increase its global applicability.
-    
-    \item \textbf{Source credibility:} Incorporating information about the source of content (website reputation, author history) could improve accuracy.
-    
-    \item \textbf{Real-time fact-checking:} Integrating with knowledge bases to verify specific claims against known facts.
-    
-    \item \textbf{Social context:} Analyzing how content spreads on social media could provide additional signals for detection.
-\end{itemize}
-
-\subsection{System Enhancements}
-\label{subsec:system_enhancements}
-
-\begin{itemize}
-    \item \textbf{Browser extension:} Developing a browser extension that automatically analyzes news content as users browse would improve accessibility.
-    
-    \item \textbf{Mobile application:} A dedicated mobile app would make the system more convenient for users on phones and tablets.
-    
-    \item \textbf{API rate limiting and authentication:} Production deployment would require proper access control and rate limiting.
-    
-    \item \textbf{Model versioning:} Implementing model versioning would allow tracking of performance over time and easy rollback if needed.
-    
-    \item \textbf{Continuous training:} Setting up automated pipelines to periodically retrain models on new data would help maintain accuracy as fake news tactics evolve.
-\end{itemize}
-
-\subsection{Research Directions}
-\label{subsec:research_directions}
-
-\begin{itemize}
-    \item \textbf{Cross-domain evaluation:} Testing the models on fake news from different domains (health, science, finance) would reveal generalization capabilities.
-    
-    \item \textbf{Adversarial robustness:} Studying how the models respond to deliberately crafted adversarial examples would identify vulnerabilities.
-    
-    \item \textbf{Temporal analysis:} Investigating how model performance changes over time as new misinformation patterns emerge.
-    
-    \item \textbf{User studies:} Conducting studies to understand how users interact with and trust the system's predictions.
-\end{itemize}
-
-\section{Final Remarks}
-\label{sec:final_remarks}
-
-Fake news remains a significant challenge in the digital information landscape. While automated detection systems like UnFake cannot solve this problem alone, they can serve as valuable tools to help users navigate the complex media environment.
-
-The UnFake system demonstrates that machine learning can effectively assist in identifying potential misinformation. By combining modern deep learning techniques with practical software engineering, the project delivers a working solution that can be deployed and used today.
-
-Most importantly, this project shows that even with limited resources, it is possible to build systems that contribute positively to the fight against misinformation. As these technologies continue to improve, they will play an increasingly important role in promoting information integrity online.
+The UnFake system demonstrates that machine learning can effectively assist in identifying misinformation, serving as a valuable tool to help users navigate the digital information landscape.

@@ -1,152 +1,28 @@
 \chapter{Discussion and Analysis}
 \label{ch:evaluation}
 
-This chapter analyzes the results presented in Chapter~\ref{ch:results}, discusses the significance of the findings, and examines the limitations of the UnFake system.
+This chapter analyzes the results and examines the limitations of the UnFake system.
 
 \section{Analysis of Model Performance}
 \label{sec:performance_analysis}
 
-\subsection{Headline Model Analysis}
-\label{subsec:headline_analysis}
+The headline model achieved 74.69\% accuracy, which is solid performance for short text classification. The ROC-AUC score of 0.8317 indicates good discriminative ability between classes. The model shows higher precision for fake statements (0.85) but higher recall for real statements (0.80), suggesting conservative labeling of fake content.
 
-The headline model achieved 74.69\% accuracy on the test set, which represents solid performance for the challenging task of classifying short statements. Several factors contribute to understanding this result:
-
-\textbf{The Challenge of Short Text Classification:}
-Short statements and headlines provide limited context for classification. Unlike full articles, which contain multiple paragraphs of information, headlines often consist of just 10-20 words. This makes it difficult for any model to make confident predictions.
-
-\textbf{Precision vs. Recall Trade-off:}
-The model shows higher precision for fake statements (0.85) compared to real statements (0.64), but higher recall for real statements (0.80) compared to fake statements (0.71). This suggests the model is more conservative when labeling statements as fake, which may be appropriate in practice since false accusations of ``fake news'' can be harmful.
-
-\textbf{ROC-AUC Score:}
-The ROC-AUC score of 0.8317 indicates good discriminative ability. This metric is particularly important because it shows the model's ability to distinguish between classes across different threshold settings.
-
-\subsection{Article Model Analysis}
-\label{subsec:article_analysis}
-
-The article model achieved near-perfect accuracy (99.57\%), which is exceptional performance. This can be understood through several factors:
-
-\textbf{Rich Feature Space:}
-Full news articles provide thousands of words for TF-IDF vectorization, creating a rich feature space. Important words and phrases that characterize fake vs. real news can be effectively captured.
-
-\textbf{Dataset Characteristics:}
-The True.csv and Fake.csv datasets likely contain news articles with distinct characteristics. Real news articles from reputable sources may follow journalistic standards in writing style, while fake news articles may exhibit different patterns in language, sensationalism, and content structure.
-
-\textbf{Potential Overfitting Considerations:}
-While the 99.57\% accuracy is impressive, it raises questions about generalization. The model may have learned patterns specific to the training dataset that may not apply to all fake news. This is discussed further in the limitations section.
-
-\section{Significance of the Findings}
-\label{sec:significance}
-
-\subsection{Dual-Model Approach Validation}
-\label{subsec:dual_model_validation}
-
-The results validate the dual-model approach used in UnFake. By using different models for different content types, the system can:
-
-\begin{itemize}
-    \item Optimize performance for each content type
-    \item Use the most appropriate techniques for each task
-    \item Provide fast inference for both short and long texts
-\end{itemize}
-
-The significant performance difference between the two models (74.69\% vs. 99.57\%) demonstrates that one-size-fits-all approaches may not be optimal for fake news detection.
-
-\subsection{Practical Applicability}
-\label{subsec:practical_applicability}
-
-The system demonstrates practical applicability:
-
-\begin{itemize}
-    \item \textbf{Real-time inference:} Response times under 100ms for single predictions enable real-time use in web applications.
-    
-    \item \textbf{User-friendly interface:} The web frontend makes the technology accessible to non-technical users.
-    
-    \item \textbf{Confidence scores:} Probability outputs help users understand the model's certainty, enabling informed decision-making.
-    
-    \item \textbf{Batch processing:} Support for batch predictions enables integration with content moderation systems.
-\end{itemize}
-
-\subsection{Comparison with Existing Systems}
-\label{subsec:comparison_existing}
-
-The UnFake system's performance is competitive with existing fake news detection research:
-
-\begin{itemize}
-    \item Many research papers report accuracy in the 70-85\% range for statement/claim classification
-    \item Article-level classification often achieves 90-99\% accuracy on standard benchmarks
-    \item The use of RoBERTa for short texts and traditional ML for longer texts represents a pragmatic hybrid approach
-\end{itemize}
+The article model achieved 99.57\% accuracy due to the rich feature space provided by full-length articles. TF-IDF vectorization effectively captures distinguishing patterns between fake and real news articles.
 
 \section{Limitations}
 \label{sec:limitations}
 
-\subsection{Data Limitations}
-\label{subsec:data_limitations}
+The main limitations of the system include:
 
-\textbf{Geographic and Topic Bias:}
-The PolitiFact dataset primarily covers U.S. political statements. The model may not generalize well to:
 \begin{itemize}
-    \item Non-political fake news (health, science, entertainment)
-    \item News from other countries and cultures
-    \item Non-English language content
+    \item \textbf{Data bias:} The PolitiFact dataset primarily covers U.S. political statements, limiting generalization to other topics and regions.
+    \item \textbf{Context independence:} Models classify based solely on text content, without considering source credibility or publication date.
+    \item \textbf{Headline accuracy:} The 74.69\% accuracy means approximately 1 in 4 predictions may be incorrect.
+    \item \textbf{Potential overfitting:} The article model's near-perfect accuracy may not generalize to diverse external datasets.
 \end{itemize}
 
-\textbf{Temporal Aspects:}
-Fake news tactics evolve over time. Models trained on historical data may become less effective as new misinformation strategies emerge.
-
-\textbf{Label Quality:}
-While PolitiFact is a respected fact-checking organization, any human-labeled dataset may contain some errors or subjective judgments.
-
-\subsection{Model Limitations}
-\label{subsec:model_limitations}
-
-\textbf{Context Independence:}
-The models classify text based solely on content, without considering:
-\begin{itemize}
-    \item The source of the information
-    \item The date of publication
-    \item Related fact-checks or corrections
-    \item Social context and spread patterns
-\end{itemize}
-
-\textbf{Adversarial Vulnerability:}
-Like most machine learning systems, the models may be vulnerable to adversarial attacks where text is deliberately crafted to fool the classifier.
-
-\textbf{Explainability:}
-While the system provides confidence scores, it does not explain why a particular prediction was made. Users cannot see which words or phrases influenced the classification.
-
-\subsection{Headline Model Specific Limitations}
-\label{subsec:headline_limitations}
-
-The 74.69\% accuracy, while reasonable, means that approximately 1 in 4 predictions may be incorrect. This is significant when:
-\begin{itemize}
-    \item Users rely solely on the system without additional verification
-    \item The system is used for automated content moderation
-    \item False positives (real news labeled as fake) could harm legitimate sources
-\end{itemize}
-
-\subsection{Article Model Specific Limitations}
-\label{subsec:article_limitations}
-
-The near-perfect accuracy may indicate:
-\begin{itemize}
-    \item Potential overfitting to the training data distribution
-    \item The model learning dataset-specific artifacts rather than generalizable fake news patterns
-    \item Need for evaluation on more diverse external datasets
-\end{itemize}
-
-\section{Recommendations for Use}
-\label{sec:recommendations}
-
-Based on the analysis, the following recommendations are made for using the UnFake system:
-
-\begin{enumerate}
-    \item \textbf{Use as a tool, not a decision-maker:} The system should assist human judgment, not replace it. Users should verify important claims through additional sources.
-    
-    \item \textbf{Consider confidence scores:} Low confidence predictions should be treated with more skepticism than high confidence ones.
-    
-    \item \textbf{Be aware of limitations:} Users should understand that the system works best for U.S. political content and may be less accurate for other topics.
-    
-    \item \textbf{Cross-reference with fact-checkers:} For important claims, users should check established fact-checking organizations.
+The system should be used as a tool to assist human judgment, not replace it.
     
     \item \textbf{Regular model updates:} In production, models should be periodically retrained on new data to maintain effectiveness.
 \end{enumerate}

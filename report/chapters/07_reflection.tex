@@ -1,52 +1,8 @@
 \chapter{Reflection}
 \label{ch:reflection}
 
-This chapter reflects on my personal learning experience throughout the development of the UnFake project. Working on this project has been both challenging and rewarding, providing opportunities for growth in technical skills, problem-solving, and project management.
+This project significantly expanded my understanding of machine learning and NLP. I gained practical experience with fine-tuning transformers, handling class imbalance, and learned that traditional ML methods can outperform deep learning for certain tasks.
 
-\section{Learning Experience}
-\label{sec:learning_experience}
+Key challenges included managing GPU memory constraints, handling noisy scraped data, and systematic model selection. If starting again, I would build an end-to-end prototype earlier and use experiment tracking tools like MLflow from the start.
 
-The UnFake project significantly expanded my understanding of machine learning and natural language processing. Before this project, my knowledge of transformer models was largely theoretical. Through hands-on implementation, I gained practical experience with fine-tuning pre-trained models, understanding tokenization, and handling class imbalance in training data.
-
-One of the most valuable lessons was learning how different machine learning approaches suit different problems. Initially, I assumed that deep learning would be the best solution for all classification tasks. However, through experimentation, I discovered that traditional machine learning methods like Gradient Boosting can outperform complex neural networks for certain tasks, especially when working with structured features like TF-IDF vectors.
-
-The project also improved my software engineering skills. Building a complete system from data collection to deployment taught me the importance of clean code organization, proper error handling, and API design. Using FastAPI for the backend introduced me to modern async Python development and automatic API documentation with Swagger.
-
-\section{Challenges Faced}
-\label{sec:challenges_faced}
-
-Several challenges arose during the project:
-
-\begin{itemize}
-    \item \textbf{Class imbalance:} The PolitiFact dataset had uneven label distribution. I learned to use class weights during training to address this issue, which improved the model's ability to handle minority classes.
-    
-    \item \textbf{Computational resources:} Training transformer models requires significant GPU memory. I had to carefully manage batch sizes and gradient accumulation to work within hardware limitations.
-    
-    \item \textbf{Data quality:} Some scraped data contained noise and inconsistencies. Developing robust preprocessing pipelines was essential for model performance.
-    
-    \item \textbf{Model selection:} Choosing between different architectures required extensive experimentation. I learned to systematically evaluate options rather than relying on intuition alone.
-\end{itemize}
-
-\section{What I Would Do Differently}
-\label{sec:do_differently}
-
-If I were to start this project again, I would make several changes:
-
-\begin{enumerate}
-    \item \textbf{Earlier prototyping:} I would build a simple end-to-end prototype first before focusing on model optimization. This would help identify integration challenges earlier.
-    
-    \item \textbf{More diverse datasets:} I would incorporate data from multiple sources earlier in the project to improve model generalization.
-    
-    \item \textbf{Better experiment tracking:} Using tools like MLflow or Weights \& Biases from the start would have made it easier to compare experiments and reproduce results.
-    
-    \item \textbf{User testing:} I would involve potential users earlier in the development process to get feedback on the interface and functionality.
-\end{enumerate}
-
-\section{Impact on Future Work}
-\label{sec:impact_future}
-
-This project has directly influenced my career interests. Working with NLP and machine learning has reinforced my desire to pursue a career in AI development. The skills gained---from data preprocessing to model deployment---are directly applicable to industry roles.
-
-The experience of building a complete system has also taught me the value of thinking beyond just the model. A machine learning project is not just about achieving high accuracy; it is about creating something useful and accessible to end users.
-
-In conclusion, the UnFake project has been a significant learning experience. The challenges I faced pushed me to develop new skills, and the successes have given me confidence to tackle more complex AI projects in the future. 
+The experience reinforced my interest in AI development and taught me that successful ML projects require thinking beyond just model accuracy---creating useful, accessible systems for end users is equally important. 
