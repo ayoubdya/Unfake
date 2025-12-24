@@ -18,7 +18,7 @@ This approach allows the system to optimize performance for each content type. S
 
 Figure~\ref{fig:system_architecture} shows the overall system architecture.
 
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/System Component Architecture.png}
     \caption{System Component Architecture showing the three-tier structure of the UnFake system.}
@@ -27,7 +27,7 @@ Figure~\ref{fig:system_architecture} shows the overall system architecture.
 
 Figure~\ref{fig:model_selection} illustrates the model selection logic, showing how the system routes input to the appropriate model based on content type.
 
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/Model Selection Logic.png}
     \caption{Model selection logic showing how inputs are routed to the appropriate model based on content type.}
@@ -36,7 +36,7 @@ Figure~\ref{fig:model_selection} illustrates the model selection logic, showing 
 
 Figure~\ref{fig:training_architecture} provides an overview of the complete training pipeline, from data sources through processing to the final model artifacts.
 
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/Training Architecture Overview.png}
     \caption{Training architecture overview showing data sources, processing steps, and output artifacts.}
@@ -69,7 +69,7 @@ For binary classification, these verdicts were mapped to two classes as shown in
     \item \textbf{Fake (0):} Mostly False, False, Pants on Fire
 \end{itemize}
 
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/Headline Model Dataset Label Mapping.png}
     \caption{Label mapping for the headline model dataset.}
@@ -184,7 +184,7 @@ The training process involves:
 
 Figure~\ref{fig:headline_training} shows the training history including loss, accuracy, and F1 score over epochs.
 
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/Headline Model Training History (Loss, Accuracy, F1 Score).png}
     \caption{Headline model training history showing loss, accuracy, and F1 score over epochs.}
@@ -244,7 +244,7 @@ The model is trained on the TF-IDF transformed training data and achieves excell
 
 During development, several classification algorithms were evaluated:
 
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/Article Model Multi-Model Evaluation.png}
     \caption{Comparison of different classification algorithms for the article model.}
@@ -285,7 +285,7 @@ The API provides the following endpoints:
 
 Figure~\ref{fig:backend_api} shows the high-level API processing pipeline from client request to JSON response.
 
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/Backend API.png}
     \caption{Backend API processing pipeline showing request validation, preprocessing, inference, and response generation.}
@@ -294,7 +294,7 @@ Figure~\ref{fig:backend_api} shows the high-level API processing pipeline from c
 
 Figure~\ref{fig:request_flow} shows the detailed request/response flow through the API.
 
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/RequestResponse Flow.png}
     \caption{Request and response flow through the API.}
@@ -334,14 +334,14 @@ The interface allows users to:
 
 Figure~\ref{fig:frontend_input} shows the input interface, and Figure~\ref{fig:frontend_result} shows the results display.
 
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/Frontend Screenshot Input Statement.png}
     \caption{Frontend interface for inputting statements.}
     \label{fig:frontend_input}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/Frontend Screenshot Statement Result.png}
     \caption{Frontend display of classification results.}
