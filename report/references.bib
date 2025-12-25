@@ -31,10 +31,10 @@
 
 % UnFake Project References
 
-@inproceedings{shu2017fake,
+@article{shu2017fake,
   title={Fake news detection on social media: A data mining perspective},
   author={Shu, Kai and Sliva, Amy and Wang, Suhang and Tang, Jiliang and Liu, Huan},
-  booktitle={ACM SIGKDD Explorations Newsletter},
+  journal={ACM SIGKDD Explorations Newsletter},
   volume={19},
   number={1},
   pages={22--36},
@@ -47,14 +47,17 @@
   author={Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, {\L}ukasz and Polosukhin, Illia},
   booktitle={Advances in Neural Information Processing Systems},
   volume={30},
+  pages={5998--6008},
   year={2017}
 }
 
-@article{devlin2019bert,
+@inproceedings{devlin2019bert,
   title={{BERT}: Pre-training of deep bidirectional transformers for language understanding},
   author={Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
-  journal={arXiv preprint arXiv:1810.04805},
-  year={2019}
+  booktitle={Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
+  pages={4171--4186},
+  year={2019},
+  publisher={Association for Computational Linguistics}
 }
 
 @article{liu2019roberta,
@@ -64,14 +67,16 @@
   year={2019}
 }
 
-@article{wang2017liar,
-  title={{LIAR}: A benchmark dataset for fake news detection},
+@inproceedings{wang2017liar,
+  title={{``Liar, Liar Pants on Fire''}: A new benchmark dataset for fake news detection},
   author={Wang, William Yang},
-  journal={arXiv preprint arXiv:1705.00648},
-  year={2017}
+  booktitle={Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics},
+  pages={422--426},
+  year={2017},
+  publisher={Association for Computational Linguistics}
 }
 
-@article{chen2016xgboost,
+@inproceedings{chen2016xgboost,
   title={{XGBoost}: A scalable tree boosting system},
   author={Chen, Tianqi and Guestrin, Carlos},
   booktitle={Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
@@ -88,7 +93,7 @@
   number={5},
   pages={1189--1232},
   year={2001},
-  publisher={JSTOR}
+  publisher={Institute of Mathematical Statistics}
 }
 
 @article{allcott2017social,
@@ -98,7 +103,8 @@
   volume={31},
   number={2},
   pages={211--236},
-  year={2017}
+  year={2017},
+  publisher={American Economic Association}
 }
 
 @article{vosoughi2018spread,
@@ -112,7 +118,7 @@
   publisher={American Association for the Advancement of Science}
 }
 
-@inproceedings{zhang2020overview,
+@article{zhang2020overview,
   title={An overview of online fake news: Characterization, detection, and discussion},
   author={Zhang, Xichen and Ghorbani, Ali A},
   journal={Information Processing \& Management},
@@ -139,50 +145,54 @@
   author={Wang, Yaqing and Ma, Fenglong and Jin, Zhiwei and Yuan, Ye and Xun, Guangxu and Jha, Kishlay and Su, Lu and Gao, Jing},
   booktitle={Proceedings of the 24th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
   pages={849--857},
-  year={2018}
+  year={2018},
+  publisher={ACM}
 }
 
-@article{mikolov2013word2vec,
-  title={Efficient estimation of word representations in vector space},
-  author={Mikolov, Tomas and Chen, Kai and Corrado, Greg and Dean, Jeffrey},
-  journal={arXiv preprint arXiv:1301.3781},
+@inproceedings{mikolov2013word2vec,
+  title={Distributed representations of words and phrases and their compositionality},
+  author={Mikolov, Tomas and Sutskever, Ilya and Chen, Kai and Corrado, Greg S and Dean, Jeff},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={26},
+  pages={3111--3119},
   year={2013}
 }
 
-@article{pennington2014glove,
+@inproceedings{pennington2014glove,
   title={{GloVe}: Global vectors for word representation},
   author={Pennington, Jeffrey and Socher, Richard and Manning, Christopher D},
   booktitle={Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing},
   pages={1532--1543},
-  year={2014}
+  year={2014},
+  publisher={Association for Computational Linguistics}
 }
 
 @misc{politifact,
   author = {{PolitiFact}},
-  title = {{PolitiFact}: The Poynter Institute},
+  title = {{PolitiFact} -- Fact-checking journalism from The Poynter Institute},
   year = {2024},
   url = {https://www.politifact.com/},
-  note = {(accessed 2024)}
+  note = {Accessed: December 2024}
 }
 
 @misc{huggingface,
-  author = {{Hugging Face}},
-  title = {Transformers: State-of-the-art Natural Language Processing},
-  year = {2024},
+  author = {Wolf, Thomas and Debut, Lysandre and Sanh, Victor and Chaumond, Julien and Delangue, Clement and Moi, Anthony and Cistac, Pierric and Rault, Tim and Louf, Remi and Funtowicz, Morgan and others},
+  title = {Hugging Face Transformers: State-of-the-art Natural Language Processing},
+  year = {2020},
   url = {https://huggingface.co/transformers/},
-  note = {(accessed 2024)}
+  note = {Accessed: December 2024}
 }
 
 @misc{fastapi,
-  author = {Ramirez, Sebastian},
-  title = {{FastAPI}: Modern, Fast (high-performance), Web framework for building APIs with Python 3.6+},
+  author = {Ram\'irez, Sebasti\'an},
+  title = {{FastAPI} -- Modern, fast web framework for building APIs with Python},
   year = {2024},
   url = {https://fastapi.tiangolo.com/},
-  note = {(accessed 2024)}
+  note = {Accessed: December 2024}
 }
 
 @article{pedregosa2011scikit,
-  title={Scikit-learn: Machine learning in Python},
+  title={Scikit-learn: Machine learning in {P}ython},
   author={Pedregosa, Fabian and Varoquaux, Ga{\"e}l and Gramfort, Alexandre and Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel, Mathieu and Prettenhofer, Peter and Weiss, Ron and Dubourg, Vincent and others},
   journal={Journal of Machine Learning Research},
   volume={12},
